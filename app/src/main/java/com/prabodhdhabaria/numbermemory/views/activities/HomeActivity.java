@@ -47,11 +47,11 @@ public class HomeActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         initializeViews();
-        loadLeaderboard(mLimit, mSkip);
     }
 
     private void initializeViews() {
 
+        // start game
         mBinding.start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,12 +59,15 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
+        // initialize layout manager and recycler view for leaderboard
         final LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         mBinding.list.setLayoutManager(manager);
         mBinding.list.setHasFixedSize(true);
         mBinding.list.setItemAnimator(new DefaultItemAnimator());
 
+        // initialize scroll listener to load next batch of leaderboard data
         mOnScrollListener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -80,10 +83,22 @@ public class HomeActivity extends AppCompatActivity {
         mBinding.list.setAdapter(mAdapter);
     }
 
+    /**
+     * load leader board data in batches and show in recycler view
+     *
+     * @param limit
+     * @param skip
+     */
     private void loadLeaderboard(final int limit, final int skip) {
+
+        // clear all on scroll listeners from
+        // recycler view so that there is no repetition of data.
+        mBinding.list.clearOnScrollListeners();
+
         Observable.create(new ObservableOnSubscribe<List<LeaderboardItem>>() {
             @Override
             public void subscribe(ObservableEmitter<List<LeaderboardItem>> e) throws Exception {
+                // get data from database
                 List<LeaderboardItem> list = AppDatabase.getDatabase(HomeActivity.this).leaderboardDao().getSortedDataAll(limit, skip);
                 if (list != null) {
                     e.onNext(list);
@@ -95,15 +110,32 @@ public class HomeActivity extends AppCompatActivity {
                 .subscribe(new Consumer<List<LeaderboardItem>>() {
                     @Override
                     public void accept(List<LeaderboardItem> leaderboardItems) throws Exception {
+                        // increment skip
                         mSkip += leaderboardItems.size();
+
+                        // add items to adapter
                         mAdapter.addItems(leaderboardItems);
+
+                        // if mSkip is 0 , then there is no data
+                        // in database , so hide recycler view
+
                         if (mSkip == 0) {
+                            mBinding.list.clearOnScrollListeners();
                             mBinding.list.setVisibility(View.GONE);
-                        } else if (leaderboardItems.size() < limit) {
+                        }
+
+                        // if number of items fetched in this batch is
+                        // less then limit then it means there is
+                        // no more data. so we clear the listeners on recycler view.
+                        else if (leaderboardItems.size() < limit) {
                             mBinding.list.clearOnScrollListeners();
                             mBinding.list.setVisibility(View.VISIBLE);
 
-                        } else {
+                        }
+
+                        // otherwise add the scroll listener
+                        // and make recycler view visible.
+                        else {
                             mBinding.list.addOnScrollListener(mOnScrollListener);
                             mBinding.list.setVisibility(View.VISIBLE);
 
@@ -112,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        throwable.printStackTrace();
                     }
                 }, new Action() {
                     @Override
@@ -125,18 +157,30 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // refresh leaderboard data
         refreshLeaderboardData();
     }
 
+    /**
+     * refresh leaderboard data
+     */
     private void refreshLeaderboardData() {
+        // reset skip to load data from start
         mSkip = 0;
+
+        // clear adapter
         mAdapter.clear();
+
+        // load leaderboard data
         loadLeaderboard(mLimit, mSkip);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        // destroy database instance
         AppDatabase.destroyInstance();
     }
 
@@ -157,7 +201,10 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
             LeaderboardItem item = mList.get(position);
+            // set name
             holder.mBinding.name.setText(item.getName());
+
+            // set score
             holder.mBinding.score.setText(String.valueOf(item.getScore()));
         }
 
@@ -173,6 +220,7 @@ public class HomeActivity extends AppCompatActivity {
 
         public void clear() {
             mList.clear();
+            notifyDataSetChanged();
         }
 
         class ItemHolder extends RecyclerView.ViewHolder {

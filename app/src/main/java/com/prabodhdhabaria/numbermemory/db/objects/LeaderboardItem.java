@@ -13,7 +13,7 @@ public class LeaderboardItem {
 
     private String mName;
 
-    private int mScore;
+    private int mScore = 0;
 
     public LeaderboardItem() {
     }

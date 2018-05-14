@@ -9,7 +9,7 @@ import com.prabodhdhabaria.numbermemory.db.dao.LeaderboardDao;
 import com.prabodhdhabaria.numbermemory.db.objects.LeaderboardItem;
 
 /**
- * Created by Prabodh Dhabaria on 14-05-2018.
+ * Application Database
  */
 @Database(entities = {LeaderboardItem.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
@@ -20,7 +20,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase getDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE = Room.databaseBuilder(context, AppDatabase.class, "userdatabase")
-                    .allowMainThreadQueries()
                     .build();
         }
         return INSTANCE;
