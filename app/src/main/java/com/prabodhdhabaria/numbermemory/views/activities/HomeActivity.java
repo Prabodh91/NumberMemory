@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     ActivityHomeBinding mBinding;
-    private int mSkip = 0, mLimit = 10;
+    private int mSkip = 0, mLimit = 20;
     private ItemAdapter mAdapter;
     private RecyclerView.OnScrollListener mOnScrollListener;
 
@@ -65,7 +65,6 @@ public class HomeActivity extends AppCompatActivity {
 
         mBinding.list.setLayoutManager(manager);
         mBinding.list.setHasFixedSize(true);
-        mBinding.list.setItemAnimator(new DefaultItemAnimator());
 
         // initialize scroll listener to load next batch of leaderboard data
         mOnScrollListener = new RecyclerView.OnScrollListener() {
@@ -117,11 +116,12 @@ public class HomeActivity extends AppCompatActivity {
                         mAdapter.addItems(leaderboardItems);
 
                         // if mSkip is 0 , then there is no data
-                        // in database , so hide recycler view
+                        // in database , so hide recycler view and labels.
 
                         if (mSkip == 0) {
                             mBinding.list.clearOnScrollListeners();
                             mBinding.list.setVisibility(View.GONE);
+                            mBinding.labels.setVisibility(View.GONE);
                         }
 
                         // if number of items fetched in this batch is
@@ -130,6 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                         else if (leaderboardItems.size() < limit) {
                             mBinding.list.clearOnScrollListeners();
                             mBinding.list.setVisibility(View.VISIBLE);
+                            mBinding.labels.setVisibility(View.VISIBLE);
 
                         }
 
@@ -138,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
                         else {
                             mBinding.list.addOnScrollListener(mOnScrollListener);
                             mBinding.list.setVisibility(View.VISIBLE);
+                            mBinding.labels.setVisibility(View.VISIBLE);
 
                         }
                     }

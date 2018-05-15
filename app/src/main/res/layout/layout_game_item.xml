@@ -13,7 +13,7 @@
             android:id="@+id/front"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#fff">
+            android:background="@color/tileFrontColor">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/item"
@@ -22,7 +22,9 @@
                 android:layout_gravity="center"
                 android:layout_margin="4dp"
                 android:gravity="center"
-                android:textSize="18sp"/>
+                android:textColor="#000"
+                android:textSize="32sp"
+                android:textStyle="bold"/>
 
         </FrameLayout>
 
@@ -30,7 +32,7 @@
             android:id="@+id/back"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ededed">
+            android:background="@color/tileBackColor">
 
         </FrameLayout>
     </com.prabodhdhabaria.numbermemory.views.widgets.SquareFrameLayout>

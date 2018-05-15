@@ -1,9 +1,9 @@
 package com.prabodhdhabaria.numbermemory.views.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -76,7 +76,7 @@ public class GameActivity extends AppCompatActivity {
     private int mScore = 0;
     private int mPairsIdentified = 0;
     private int mPairs = 0;
-    private ProgressDialog mDialog;
+
 
     @Override
     public void onBackPressed() {
@@ -122,10 +122,6 @@ public class GameActivity extends AppCompatActivity {
         // set player name
         mBinding.playerName.setText(mItem.getName());
 
-        // dialog to show that the score is being saved
-        mDialog = new ProgressDialog(this);
-        mDialog.setMessage("Saving Data");
-
         // calculate total number of items for grid
         int totalItems = mGridSize * mGridSize;
 
@@ -154,7 +150,6 @@ public class GameActivity extends AppCompatActivity {
      * finish game. save player score and exit.
      */
     private void endGame() {
-        mDialog.show();
         Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
@@ -170,25 +165,20 @@ public class GameActivity extends AppCompatActivity {
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
-                        if (aBoolean) {
-                            //dismiss the progress dialog
-                            mDialog.dismiss();
-                        }
-
+                        finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         throwable.printStackTrace();
-                        mDialog.dismiss();
-                        finish();
-                    }
-                }, new Action() {
-                    @Override
-                    public void run() throws Exception {
                         finish();
                     }
                 });
+    }
+
+    private void playClick() {
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.click);
+        mediaPlayer.start();
     }
 
     class Item {
@@ -218,6 +208,10 @@ public class GameActivity extends AppCompatActivity {
             return new ItemHolder(binding);
         }
 
+        private int mColorCorrectPairingBackground = 0xFF4CAF50;
+        private int mColorCorrectPairingText = 0xffffffff;
+        private int mTileAnimationTimeInMilliSeconds = 250;
+
         @Override
         public void onBindViewHolder(@NonNull final ItemHolder holder, final int position) {
             final Item item = mList.get(position);
@@ -235,10 +229,10 @@ public class GameActivity extends AppCompatActivity {
                     holder.mBinding.front.animate().alpha(0).rotationYBy(180).setInterpolator(new LinearInterpolator()).setDuration(100).start();
                     holder.mBinding.back.animate().alpha(1).rotationYBy(-180).setInterpolator(new LinearInterpolator()).setDuration(100).start();
                 }
-            }
-            // if grid item has not been paired then
-            // set click listener otherwise remove it.
-            if (!item.checked) {
+
+                // if grid item has not been paired then
+                // set click listener otherwise remove it.
+
                 holder.mBinding.container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -246,6 +240,13 @@ public class GameActivity extends AppCompatActivity {
                     }
                 });
             } else {
+
+                // update grid item UI if it has been paired
+                holder.mBinding.front.setBackgroundColor(mColorCorrectPairingBackground);
+                holder.mBinding.item.setTextColor(mColorCorrectPairingText);
+
+
+                // remove click listener if grid item has been paired
                 holder.mBinding.container.setOnClickListener(null);
             }
 
@@ -254,17 +255,28 @@ public class GameActivity extends AppCompatActivity {
         }
 
         private void flip(ItemHolder holder, Item item) {
+
+            // close a grid item
             if (item.open) {
 //                holder.mBinding.front.setVisibility(View.GONE);
 //                holder.mBinding.back.setVisibility(View.VISIBLE);
-                holder.mBinding.front.animate().alpha(0).rotationYBy(180).setInterpolator(new LinearInterpolator()).setDuration(400).start();
-                holder.mBinding.back.animate().alpha(1).rotationYBy(-180).setInterpolator(new LinearInterpolator()).setDuration(400).start();
+                holder.mBinding.front.animate().alpha(0).rotationYBy(180).setInterpolator(new LinearInterpolator()).setDuration(mTileAnimationTimeInMilliSeconds).start();
+                holder.mBinding.back.animate().alpha(1).rotationYBy(-180).setInterpolator(new LinearInterpolator()).setDuration(mTileAnimationTimeInMilliSeconds).start();
+                holder.mBinding.container.animate().translationZ(0).start();
                 item.open = false;
-            } else {
+            }
+
+            // open a grid item
+            else {
 //                holder.mBinding.front.setVisibility(View.VISIBLE);
 //                holder.mBinding.back.setVisibility(View.GONE);
-                holder.mBinding.front.animate().alpha(1).rotationYBy(180).setInterpolator(new LinearInterpolator()).setDuration(400).start();
-                holder.mBinding.back.animate().alpha(0).rotationYBy(-180).setInterpolator(new LinearInterpolator()).setDuration(400).start();
+
+                // play click sound
+                playClick();
+
+                holder.mBinding.front.animate().alpha(1).rotationYBy(180).setInterpolator(new LinearInterpolator()).setDuration(mTileAnimationTimeInMilliSeconds).start();
+                holder.mBinding.back.animate().alpha(0).rotationYBy(-180).setInterpolator(new LinearInterpolator()).setDuration(mTileAnimationTimeInMilliSeconds).start();
+                holder.mBinding.container.animate().translationZ(12).start();
                 item.open = true;
             }
         }

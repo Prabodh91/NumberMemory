@@ -23,14 +23,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/close"
-            android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
             android:layout_toRightOf="@+id/close"
             android:text="@string/scorelabel"
             android:textColor="#fff"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/score"
@@ -41,7 +42,8 @@
             android:layout_toRightOf="@+id/scoreLabel"
             android:text="0"
             android:textColor="#fff"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/playerLabel"
@@ -63,7 +65,8 @@
             android:gravity="center"
             android:singleLine="true"
             android:textAllCaps="true"
-            android:textSize="24sp"/>
+            android:textSize="24sp"
+            android:textStyle="bold"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"

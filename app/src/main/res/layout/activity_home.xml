@@ -15,15 +15,53 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_margin="12dp"
             android:gravity="center_horizontal"
-            android:text="@string/title"/>
+            android:text="@string/title"
+            android:textColor="#fff"
+            android:textSize="28sp"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/start"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/start_game"/>
+            android:text="@string/start_game"
+            android:textSize="24sp"/>
+
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:id="@+id/labels"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:text="@string/name"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/score"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="@string/score"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+        </android.support.v7.widget.LinearLayoutCompat>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list"
