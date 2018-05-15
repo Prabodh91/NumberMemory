@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".views.activities.GameActivity">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp"
+            android:foregroundTint="#fff"
+            android:src="@drawable/ic_close_white_36dp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/scoreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/close"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@+id/close"
+            android:text="@string/scorelabel"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/close"
+            android:layout_margin="4dp"
+            android:layout_toRightOf="@+id/scoreLabel"
+            android:text="0"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/playerLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/close"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:text="@string/player_name"
+            android:textSize="20sp"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/playerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/playerLabel"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textAllCaps="true"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/playerName"
+            android:layout_margin="4dp"/>
+    </RelativeLayout>
+</layout>
