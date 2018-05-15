@@ -48,9 +48,9 @@ public class GameActivity extends AppCompatActivity {
     /**
      * intent to start the game. It takes player name .
      *
-     * @param context
-     * @param playerName
-     * @return
+     * @param context    context
+     * @param playerName name of the player
+     * @return intent
      */
     public static Intent getStartIntent(Context context, String playerName) {
         Intent intent = new Intent(context, GameActivity.class);
@@ -62,10 +62,10 @@ public class GameActivity extends AppCompatActivity {
      * intent to start the game. It takes player name
      * and the number of columns for the grid.
      *
-     * @param context
-     * @param playerName
-     * @param gridSize
-     * @return
+     * @param context    context
+     * @param playerName name of the player
+     * @param gridSize   columns of the square grid
+     * @return intent
      */
     public static Intent getStartIntent(Context context, String playerName, int gridSize) {
         Intent intent = new Intent(context, GameActivity.class);
@@ -132,7 +132,7 @@ public class GameActivity extends AppCompatActivity {
         mPairs = totalItems / 2;
 
         // prepare data for the grid
-        ArrayList<Item> list = new ArrayList<Item>();
+        ArrayList<Item> list = new ArrayList<>();
         for (int i = 0; i < mPairs; i++) {
             list.add(new Item(i + 1));
             list.add(new Item(i + 1));
@@ -185,13 +185,13 @@ public class GameActivity extends AppCompatActivity {
     }
 
     class Item {
-        public Item(int number) {
+        Item(int number) {
             this.number = number;
         }
 
         boolean open = false;
         boolean checked = false;
-        int number = 0;
+        int number;
     }
 
     class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
@@ -199,7 +199,7 @@ public class GameActivity extends AppCompatActivity {
         int mPositionItem1 = -1;
         int mPositionItem2 = -1;
 
-        public ItemAdapter(ArrayList<Item> list) {
+        ItemAdapter(ArrayList<Item> list) {
             mList = list;
         }
 
@@ -216,7 +216,7 @@ public class GameActivity extends AppCompatActivity {
         private int mTileAnimationTimeInMilliSeconds = 250;
 
         @Override
-        public void onBindViewHolder(@NonNull final ItemHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final ItemHolder holder, int position) {
             final Item item = mList.get(position);
 
             // if item is not paired
@@ -239,13 +239,15 @@ public class GameActivity extends AppCompatActivity {
                 holder.mBinding.container.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        updatePosition(holder, item, position);
+                        updatePosition(holder, item);
                     }
                 });
             } else {
 
                 // update grid item UI if it has been paired
                 holder.mBinding.front.setBackgroundColor(mColorCorrectPairingBackground);
+                holder.mBinding.front.setVisibility(View.VISIBLE);
+                holder.mBinding.back.setVisibility(View.GONE);
                 holder.mBinding.item.setTextColor(mColorCorrectPairingText);
 
 
@@ -284,8 +286,8 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        private void updatePosition(ItemHolder holder, Item item, int position) {
-
+        private void updatePosition(ItemHolder holder, Item item) {
+            int position = holder.getAdapterPosition();
             // check if first item is clicked upon
             if (mPositionItem1 == -1) {
                 mPositionItem1 = position;
@@ -341,7 +343,6 @@ public class GameActivity extends AppCompatActivity {
                     // reduce score
                     mScore -= SCORE_SUBTRACT_INCORRECT;
                     updateScoreOnUI(mScore);
-                    updateScoreOnUI(mScore);
                 }
 
 
@@ -367,7 +368,14 @@ public class GameActivity extends AppCompatActivity {
 
             // end game if all pairs have been identified
             if (mPairsIdentified == mPairs) {
-                endGame();
+                Completable.complete()
+                        .delay(2, TimeUnit.SECONDS)
+                        .subscribe(new Action() {
+                            @Override
+                            public void run() throws Exception {
+                                endGame();
+                            }
+                        });
             }
         }
 
@@ -379,7 +387,7 @@ public class GameActivity extends AppCompatActivity {
         class ItemHolder extends RecyclerView.ViewHolder {
             LayoutGameItemBinding mBinding;
 
-            public ItemHolder(LayoutGameItemBinding binding) {
+            ItemHolder(LayoutGameItemBinding binding) {
                 super(binding.getRoot());
                 mBinding = binding;
             }
