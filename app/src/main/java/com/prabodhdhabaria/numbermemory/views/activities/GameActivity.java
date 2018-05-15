@@ -35,6 +35,9 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+/**
+ * logic to play game.
+ */
 public class GameActivity extends AppCompatActivity {
     private final static String PLAYER_NAME = "name";
     private final static String GRID_SIZE = "grid";

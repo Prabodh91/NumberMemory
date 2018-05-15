@@ -19,7 +19,7 @@
 
     <style name="SplashTheme" parent="AppTheme">
         <!-- Customize your theme here. -->
-        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowBackground">@drawable/background</item>
     </style>
 
 </resources>
